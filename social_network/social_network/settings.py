@@ -81,7 +81,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'social_network',
         'USER': 'postgres',
-        'PASSWORD': 'qwerty051f',
+        'PASSWORD': '1',
     }
 }
 
