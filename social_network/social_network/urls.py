@@ -15,10 +15,12 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
+from django.conf import settings
+from django.conf.urls.static import static
 from django.urls import path
 from rest_framework.routers import DefaultRouter
 
-from posts.views import PostViewSet, PostDetailsView, LikeView
+from posts.views import PostViewSet, PostDetailsView, LikeView, CommentView
 from rest_framework.authtoken import views
 
 r = DefaultRouter()
@@ -29,5 +31,10 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api-token-auth/', views.obtain_auth_token),
     path('post_details/<int:post_id>/', PostDetailsView.as_view()),
+    path('post_details/<int:post_id>/comments/', CommentView.as_view()),
     path('post_details/<int:post_id>/likes/', LikeView.as_view()),
 ] + r.urls
+
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -2,7 +2,6 @@ from django.shortcuts import render
 
 # Create your views here.
 
-
 from rest_framework.exceptions import NotFound
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -24,6 +23,7 @@ class PostViewSet(ModelViewSet):
 
 class PostDetailsView(APIView):
     permission_classes = [IsAuthenticated]
+
     def get(self, request, post_id):
         try:
             post = Post.objects.get(id=post_id)
@@ -31,6 +31,10 @@ class PostDetailsView(APIView):
             return Response(serializer.data)
         except Post.DoesNotExist:
             raise NotFound('Ошибка 404')
+
+
+class CommentView(APIView):
+    permission_classes = [IsAuthenticated]
 
     def post(self, request, post_id):
         try:
@@ -56,7 +60,7 @@ class LikeView(APIView):
         except Post.DoesNotExist:
             raise NotFound('Ошибка 404')
 
-        serializer = LikeSerializer(data=request.data, context={'request': request})
+        serializer = LikeSerializer(data=request.data, context={'request': request, 'post_id': post.id})
 
         if serializer.is_valid():
             serializer.save(post=post)

@@ -25,13 +25,14 @@ class CommentSerializer(serializers.ModelSerializer):
 class LikeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Like
-        fields = ['user', ]
-        read_only_fields = ['user', ]
+        fields = ['user', 'post']
+        read_only_fields = ['user', 'post']
 
     def create(self, validated_data):
         user = self.context.get('request').user
-        print("Authenticated user:", user)
         validated_data['user'] = user
+        post_id = self.context.get('post_id')
+        validated_data['post'] = Post.objects.get(id=post_id)
         return super().create(validated_data)
 
 
